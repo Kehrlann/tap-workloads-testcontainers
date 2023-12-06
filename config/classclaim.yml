@@ -7,7 +7,7 @@ metadata:
   namespace: #@ data.values.workloads.namespace
 spec:
   classRef:
-    name: #! TODO
+    name: #@ data.values.classclaim.name
   parameters:
     workloadRef:
       name: #@ data.values.workloads.name

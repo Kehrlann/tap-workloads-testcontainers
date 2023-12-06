@@ -16,14 +16,6 @@ spec:
       - name: BP_JVM_VERSION
         value: "17"
   params:
-    #! Selects the pipeline
-    - name: testing_pipeline_matching_labels
-      value:
-        apps.tanzu.vmware.com/pipeline: testcontainers-pipeline
-    #! Matches the secret to the pipeline itself
-    - name: testing_pipeline_params
-      value:
-        docker-secret-name: docker-secrets
     - name: live-update
       value: "true"
   serviceClaims:

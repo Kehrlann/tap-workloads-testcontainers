@@ -3,15 +3,15 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: default-pipeline
+  name: testcontainers-pipeline
   namespace: #@ data.values.workloads.namespace
   labels:
-    apps.tanzu.vmware.com/pipeline: test
-    apps.tanzu.vmware.com/language: java
+    apps.tanzu.vmware.com/pipeline: testcontainers-pipeline
 spec:
   params:
     - name: source-url
     - name: source-revision
+    - name: docker-secret-name
   tasks:
     - name: test
       params:
@@ -19,10 +19,13 @@ spec:
           value: $(params.source-url)
         - name: source-revision
           value: $(params.source-revision)
+        - name: docker-secret-name
+          value: $(params.docker-secret-name)
       taskSpec:
         params:
           - name: source-url
           - name: source-revision
+          - name: docker-secret-name
         stepTemplate:
           securityContext:
             allowPrivilegeEscalation: false
@@ -33,10 +36,27 @@ spec:
             seccompProfile:
               type: "RuntimeDefault"
             runAsNonRoot: true
+        volumes:
+          - name: docker-cert-path
+            secret:
+              secretName: $(params.docker-secret-name)
         steps:
           - name: test
             image: gradle
             script: |-
               cd `mktemp -d`
               wget -qO- $(params.source-url) | tar xvz -m
-              ./gradlew test
+              ./gradlew test --info
+            env:
+            - name: DOCKER_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: docker_host
+                  name: $(params.docker-secret-name)
+            - name: DOCKER_TLS_VERIFY
+              value: "1"
+            - name: DOCKER_CERT_PATH
+              value: "/var/docker/certs"
+            volumeMounts:
+              - name: docker-cert-path
+                mountPath: "/var/docker/certs"

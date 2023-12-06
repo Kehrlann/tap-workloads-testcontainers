@@ -32,6 +32,10 @@ bootJar {
     exclude("application-*.yml")
 }
 
+jar {
+  enabled = false
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }

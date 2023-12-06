@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = "server.port=1234")
-@Disabled
 class AutoLifecycleTest {
 
     // Create a container with a registered Client, with a known redirect URI.

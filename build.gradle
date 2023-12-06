@@ -29,7 +29,7 @@ dependencies {
 
 bootJar {
     // don't bundle application.yml
-    exclude("application.yml")
+    exclude("application-*.yml")
 }
 
 tasks.named('test') {

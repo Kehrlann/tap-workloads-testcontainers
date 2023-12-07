@@ -32,8 +32,15 @@ bootJar {
     exclude("application-*.yml")
 }
 
+bootRun {
+    args("--spring.profiles.active=dev")
+}
+
 jar {
-  enabled = false
+    // only produce the bootJar when building with the pack cli
+    // Enables Spring Cloud Bindings buildpack detection - otherwise there are two jars
+    // and that buildpack backs off
+    enabled = false
 }
 
 tasks.named('test') {
